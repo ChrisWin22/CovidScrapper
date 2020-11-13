@@ -107,7 +107,7 @@ public class covidScrapper {
         unitedStates.sort(new Comparator<State>() {
             @Override
             public int compare(State state, State t1) {
-                return (state.utahEq) - (t1.utahEq);
+                return (t1.utahEq) - (state.utahEq);
             }
         });
 
