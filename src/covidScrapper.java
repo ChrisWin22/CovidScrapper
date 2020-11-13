@@ -12,6 +12,7 @@ public class covidScrapper {
         int totalDeaths;
         int totalCases;
         int newDeaths;
+        int utahEq;
 
         public State(){}
 
@@ -99,10 +100,14 @@ public class covidScrapper {
 
         }
 
+        for(State state : unitedStates){
+            state.utahEq = (int) ((utah.popInMillions * state.newDailyCases) / state.popInMillions);
+        }
+
         unitedStates.sort(new Comparator<State>() {
             @Override
             public int compare(State state, State t1) {
-                return state.name.compareTo(t1.name);
+                return (state.utahEq) - (t1.utahEq);
             }
         });
 
@@ -116,13 +121,13 @@ public class covidScrapper {
 
     public static void prettyPrint(State utah, ArrayList<State> usa){
         System.out.println();
-        System.out.printf("%-21S| %-12S| %-13S| %-12S| %-13S| %-25S| %-17S|\n", "Name", "Cases Today", "Deaths Today", "Total Cases", "Total Deaths", "Population (in millions)", "Utah Equivalency");
-        System.out.println("-".repeat(126));
-        System.out.printf("%-21s| %-12d| %-13d| %-12d| %-13d| %-25.2f| %-17s|\n", utah.name, utah.newDailyCases, utah.newDeaths, utah.totalCases, utah.totalDeaths, utah.popInMillions, "N/A");
+        System.out.printf("%-21S| %-12S| %-8S| %-13S| %-9S| %-5S|\n", "Name", "Cases Today", "Utah EQ", "Deaths Today", "Death EQ", "Pop");
+        System.out.println("-".repeat(79));
+        System.out.printf("%-21s| %-12d| %-8s| %-13d| %-9d| %-5.1f|\n", utah.name, utah.newDailyCases, utah.newDailyCases, utah.newDeaths, utah.newDeaths, utah.popInMillions);
 
         for(State state : usa){
-            double utahEq = (utah.popInMillions * state.newDailyCases) / state.popInMillions;
-            System.out.printf("%-21s| %-12d| %-13d| %-12d| %-13d| %-25.2f| %-17.3f|\n", state.name, state.newDailyCases, state.newDeaths, state.totalCases, state.totalDeaths, state.popInMillions, utahEq);
+            int deathEQ = (int) ((utah.popInMillions * state.newDeaths) / state.popInMillions);
+            System.out.printf("%-21s| %-12d| %-8d| %-13d| %-9d| %-5.1f|\n", state.name, state.newDailyCases, state.utahEq, state.newDeaths, deathEQ, state.popInMillions);
         }
     }
 }
